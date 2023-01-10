@@ -1,13 +1,24 @@
 package com.example.shoppinglist.data
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.shoppinglist.domain.ShopItem
 import com.example.shoppinglist.domain.ShopListRepository
 import java.lang.RuntimeException
 
 object ShopListRepositoryImpl : ShopListRepository {
 
+    private val shopListLD=MutableLiveData<List<ShopItem>>()
+
+//    создал список, вместо базы данных
     private val shopList = mutableListOf<ShopItem>()
     private var autoIncrementId=0
+    init {
+        for (i in 0 until 10){
+            val item=ShopItem("Name $i",i,true)
+            addShopItem(item)
+        }
+    }
 
 //    для того, чтобы можно было добавить объект с тем же id, я создаю проверку:
     override fun addShopItem(shopItem: ShopItem) {
@@ -16,6 +27,7 @@ object ShopListRepositoryImpl : ShopListRepository {
             shopItem.id= autoIncrementId++
         }
         shopList.add(shopItem)
+        updateList()
     }
 
     override fun getShopItem(shopItemId: Int): ShopItem {
@@ -32,10 +44,15 @@ object ShopListRepositoryImpl : ShopListRepository {
 
     override fun deleteShopItem(shopItem: ShopItem) {
         shopList.remove(shopItem)
+        updateList()
     }
 
-    override fun getShopList(): List<ShopItem> {
-        return shopList.toMutableList()
+    override fun getShopList(): LiveData<List<ShopItem>> {
+        return shopListLD
+    }
+
+    private fun updateList(){
+        shopListLD.value= shopList.toList()
     }
 
 }
