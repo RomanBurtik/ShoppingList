@@ -30,14 +30,14 @@ object ShopListRepositoryImpl : ShopListRepository {
         updateList()
     }
 
-    override fun getShopItem(shopItemId: Int): ShopItem {
+    override fun getShopItemID(shopItemId: Int): ShopItem {
         return shopList.find { it.id == shopItemId }
             ?: throw RuntimeException("Element with $shopItemId not found")
     }
 
 //    в данный метод прилетает объект shopItem. я его удаляю и на его место новый объект вставляю. потому что нету базы данных.
     override fun modifyShopItem(shopItem: ShopItem) {
-        val oldElement = getShopItem(shopItem.id)
+        val oldElement = getShopItemID(shopItem.id)
         shopList.remove(oldElement)
         addShopItem(shopItem)
     }
