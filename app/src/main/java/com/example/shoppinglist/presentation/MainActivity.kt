@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ItemTouchHelper.LEFT
 import androidx.recyclerview.widget.ItemTouchHelper.SimpleCallback
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,6 +23,11 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.shopList.observe(this) {
             shopListAdapter.submitList(it)
+        }
+        val buttonAdd=findViewById<FloatingActionButton>(R.id.buttonAdd)
+        buttonAdd.setOnClickListener {
+            val intent = ShopItemActivity.newIntentAddItem(this)
+            startActivity(intent)
         }
     }
 
@@ -41,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         }
         setupLongClickListener()
         Log.d("setupLongClickListener","test1")
-//        setupShortClickListener()
+        setupShortClickListener()
         setupSwipeListener(rvShopList)
     }
 
@@ -63,12 +69,12 @@ class MainActivity : AppCompatActivity() {
         itemTouchHelper.attachToRecyclerView(rvShopList)
     }
 
-//    private fun setupShortClickListener() {
-//        shopListAdapter.onShopItemClickListener = {
-//            val intent =.newIntent(this.@MainActivity, )
-//            startActivity(intent)
-//        }
-//    }
+    private fun setupShortClickListener() {
+        shopListAdapter.onShopItemClickListener = {
+            val intent =ShopItemActivity.newIntentEditItem(this,it)
+            startActivity(intent)
+        }
+    }
 
     private fun setupLongClickListener() {
         Log.d("setupLongClickListener","test")
